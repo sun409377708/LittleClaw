@@ -1,0 +1,10 @@
+name: demo-concurrency-allow
+description: Demonstrate overlapping schedule runs with allow policy.
+every: 2s
+target: task
+skill: ops
+task: "shell sleep 3 && echo overlap-ok"
+concurrency: allow
+run_immediately: false
+enabled: false
+

@@ -1,0 +1,15 @@
+name: demo-approval
+description: Pause for manual approval before writing a file
+steps:
+  - type: tool
+    name: inspect-workflows
+    tool: file.list
+    input:
+      path: ./workflows
+  - type: approval
+    name: confirm-write
+    prompt: Approve writing ./tmp/approved.txt ?
+  - type: agent
+    name: write-approved-note
+    skill: coder
+    task: "写入文件 './tmp/approved.txt' 内容: approved by human review"

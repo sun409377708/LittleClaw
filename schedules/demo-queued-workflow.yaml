@@ -1,0 +1,9 @@
+name: demo-queued-workflow
+description: Submit a workflow job to the local queue on an interval.
+every: 30s
+dispatch: queue
+target: workflow
+workflow: demo-post
+concurrency: skip
+run_immediately: true
+enabled: true

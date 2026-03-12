@@ -1,0 +1,10 @@
+name: demo-cron
+description: A cron-based schedule that runs every minute.
+cron: "*/1 * * * *"
+target: task
+skill: coder
+task: "列出文件 './configs'"
+concurrency: skip
+run_immediately: false
+enabled: true
+

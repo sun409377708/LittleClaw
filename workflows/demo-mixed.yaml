@@ -1,0 +1,16 @@
+name: demo-mixed
+description: Minimal mixed workflow using both tool and agent steps.
+steps:
+  - type: tool
+    name: fetch-example
+    tool: http.get
+    input:
+      url: https://example.com
+  - type: agent
+    name: list-tools
+    skill: coder
+    task: "列出文件 './internal/tools'"
+  - type: agent
+    name: write-note
+    skill: coder
+    task: "写入文件 './tmp/workflow-note.txt' 内容: workflow finished"

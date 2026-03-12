@@ -1,0 +1,15 @@
+name: demo-failure-policy
+description: Continue after a failed step and still run a recovery note step.
+steps:
+  - type: tool
+    name: forbidden-read
+    tool: file.read
+    on_failure: continue
+    input:
+      path: ../outside.txt
+  - type: agent
+    name: recovery-note
+    skill: coder
+    when_step: forbidden-read
+    when_status: failed
+    task: "写入文件 './tmp/recovery.txt' 内容: recovered after failure"

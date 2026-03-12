@@ -1,0 +1,9 @@
+name: demo-task
+description: Run a simple local inspection task on an interval
+every: 10s
+target: task
+skill: coder
+task: "列出文件 './internal/tools'"
+concurrency: skip
+run_immediately: true
+enabled: true

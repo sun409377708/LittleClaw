@@ -1,0 +1,12 @@
+name: demo-variables
+description: Pass values from one workflow step into later steps.
+steps:
+  - type: tool
+    name: list-internal-tools
+    tool: file.list
+    input:
+      path: ./internal/tools
+  - type: agent
+    name: write-variable-note
+    skill: coder
+    task: "写入文件 './tmp/workflow-vars.txt' 内容: status={{steps.list-internal-tools.status}} output={{steps.list-internal-tools.output}}"

@@ -1,0 +1,35 @@
+app:
+  name: littleclaw
+  log_level: info
+api:
+  listen: :8080
+  read_timeout: 15s
+  write_timeout: 30s
+llm:
+  planner_mode: auto
+  enabled: false
+  provider: minimax
+  base_url: https://api.minimax.chat/v1/text/chatcompletion_v2
+  model: MiniMax-M2.5
+  api_key_env: MINIMAX_API_KEY
+  http_timeout: 30s
+approvals:
+  dir: approvals
+memory:
+  dir: memories
+  retrieval_limit: 3
+queue:
+  dir: queue_jobs
+  dead_letter_dir: queue_dead
+  lock_file: .littleclaw/worker.lock
+  poll: 1s
+  backoff_base: 2s
+  backoff_max: 30s
+  concurrency: 1
+skills:
+  dir: skills
+workflows:
+  dir: workflows
+schedules:
+  dir: schedules
+  lock_file: .littleclaw/scheduler.lock

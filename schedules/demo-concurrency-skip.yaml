@@ -1,0 +1,9 @@
+name: demo-concurrency-skip
+description: Demonstrate skip policy when a prior run is still active.
+every: 2s
+target: task
+skill: ops
+task: "shell sleep 3 && echo overlap-skip"
+concurrency: skip
+run_immediately: false
+enabled: false

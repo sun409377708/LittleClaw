@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="page_title">LittleClaw Console</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow" data-i18n="hero_eyebrow">LittleClaw Runtime</p>
+          <h1 data-i18n="hero_title">Control Console</h1>
+          <p class="lede" data-i18n="hero_lede">Run tasks, trigger workflows, approve guarded steps, and inspect live runtime state from one screen.</p>
+        </div>
+        <div class="hero-actions">
+          <label class="language-switch">
+            <span data-i18n="language_label">Language</span>
+            <select id="language-select">
+              <option value="zh-CN">中文</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <button id="refresh-button" class="button button-primary" data-i18n="refresh_button">Refresh</button>
+          <label class="toggle">
+            <input id="auto-refresh" type="checkbox" checked>
+            <span data-i18n="auto_refresh">Auto refresh</span>
+          </label>
+        </div>
+      </header>
+
+      <section class="summary-grid" id="summary-grid">
+        <article class="metric-card">
+          <span class="metric-label" data-i18n="metric_task_runs">Task Runs</span>
+          <strong class="metric-value" id="metric-runs">0</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" data-i18n="metric_workflow_runs">Workflow Runs</span>
+          <strong class="metric-value" id="metric-workflows">0</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" data-i18n="metric_pending_approvals">Pending Approvals</span>
+          <strong class="metric-value" id="metric-approvals">0</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" data-i18n="metric_queue_jobs">Queue Jobs</span>
+          <strong class="metric-value" id="metric-jobs">0</strong>
+        </article>
+      </section>
+
+      <section class="status-strip">
+        <div id="status-pill" class="status-pill" data-i18n="status_loading">Loading runtime state...</div>
+      </section>
+
+      <main class="layout">
+        <section class="column column-main">
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="quick_actions_title">Quick Actions</h2>
+              <p data-i18n="quick_actions_desc">Launch task runs, workflows, or queue jobs.</p>
+            </div>
+            <div class="action-grid">
+              <form id="task-form" class="action-form">
+                <h3 data-i18n="run_task_title">Run Task</h3>
+                <label>
+                  <span data-i18n="task_label">Task</span>
+                  <textarea name="task" rows="4" data-i18n-placeholder="task_placeholder" placeholder="Summarize the largest files in this workspace"></textarea>
+                </label>
+                <div class="field-row">
+                  <label>
+                    <span data-i18n="skill_label">Skill</span>
+                    <select name="skill" id="task-skill"></select>
+                  </label>
+                  <label>
+                    <span data-i18n="planner_label">Planner</span>
+                    <select name="planner">
+                      <option value="auto">auto</option>
+                      <option value="rule">rule</option>
+                      <option value="llm">llm</option>
+                    </select>
+                  </label>
+                </div>
+                <button class="button button-primary" type="submit" data-i18n="run_task_button">Run Task</button>
+              </form>
+
+              <form id="workflow-form" class="action-form">
+                <h3 data-i18n="run_workflow_title">Run Workflow</h3>
+                <label>
+                  <span data-i18n="workflow_label">Workflow</span>
+                  <select name="name" id="workflow-name"></select>
+                </label>
+                <label>
+                  <span data-i18n="planner_label">Planner</span>
+                  <select name="planner">
+                    <option value="auto">auto</option>
+                    <option value="rule">rule</option>
+                    <option value="llm">llm</option>
+                  </select>
+                </label>
+                <button class="button button-primary" type="submit" data-i18n="run_workflow_button">Run Workflow</button>
+              </form>
+
+              <form id="queue-form" class="action-form">
+                <h3 data-i18n="queue_job_title">Queue Job</h3>
+                <label>
+                  <span data-i18n="target_label">Target</span>
+                  <select name="target" id="queue-target">
+                    <option value="task" data-i18n="target_task">task</option>
+                    <option value="workflow" data-i18n="target_workflow">workflow</option>
+                  </select>
+                </label>
+                <label class="conditional" data-target="task">
+                  <span data-i18n="task_label">Task</span>
+                  <textarea name="task" rows="3" data-i18n-placeholder="queue_task_placeholder" placeholder="Read a file and summarize it"></textarea>
+                </label>
+                <label class="conditional hidden" data-target="workflow">
+                  <span data-i18n="workflow_label">Workflow</span>
+                  <select name="workflow" id="queue-workflow"></select>
+                </label>
+                <div class="field-row">
+                  <label>
+                    <span data-i18n="skill_label">Skill</span>
+                    <select name="skill" id="queue-skill"></select>
+                  </label>
+                  <label>
+                    <span data-i18n="max_attempts_label">Max Attempts</span>
+                    <input name="max_attempts" type="number" min="1" value="2">
+                  </label>
+                </div>
+                <button class="button button-primary" type="submit" data-i18n="submit_job_button">Submit Job</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="approvals_title">Approvals</h2>
+              <p data-i18n="approvals_desc">Human confirmation gates from workflows.</p>
+            </div>
+            <div id="approvals-list" class="list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="workflow_runs_title">Workflow Runs</h2>
+              <p data-i18n="workflow_runs_desc">Recent orchestration executions and resumable runs.</p>
+            </div>
+            <div id="workflow-runs-list" class="list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="task_runs_title">Task Runs</h2>
+              <p data-i18n="task_runs_desc">Recent direct runtime executions.</p>
+            </div>
+            <div id="runs-list" class="list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="queue_title">Queue</h2>
+              <p data-i18n="queue_desc">Pending, running, and completed worker jobs.</p>
+            </div>
+            <div id="queue-list" class="list"></div>
+          </div>
+        </section>
+
+        <aside class="column column-side">
+          <div class="panel">
+            <div class="panel-head">
+              <h2 data-i18n="inspector_title">Inspector</h2>
+              <p data-i18n="inspector_desc">Raw payloads for the selected object.</p>
+            </div>
+            <pre id="inspector" class="inspector" data-i18n="inspector_placeholder">Select a run, approval, or job to inspect.</pre>
+          </div>
+
+          <div class="panel compact">
+            <div class="panel-head">
+              <h2 data-i18n="catalog_title">Catalog</h2>
+              <p data-i18n="catalog_desc">Available workflows and skills.</p>
+            </div>
+            <div class="catalog">
+              <div>
+                <h3 data-i18n="catalog_workflows">Workflows</h3>
+                <ul id="workflow-catalog" class="catalog-list"></ul>
+              </div>
+              <div>
+                <h3 data-i18n="catalog_skills">Skills</h3>
+                <ul id="skill-catalog" class="catalog-list"></ul>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

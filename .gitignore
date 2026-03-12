@@ -1,0 +1,13 @@
+.DS_Store
+littleclaw
+.nanoclaw/
+.playwright-cli/
+approvals/
+memories/
+output/
+queue_dead/
+queue_jobs/
+runs/
+schedule_runs/
+tmp/
+workflow_runs/

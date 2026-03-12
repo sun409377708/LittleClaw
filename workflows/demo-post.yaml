@@ -1,0 +1,12 @@
+name: demo-post
+description: Tool-only workflow demonstrating structured POST input.
+steps:
+  - type: tool
+    name: post-json
+    tool: http.post
+    input:
+      url: https://postman-echo.com/post
+      content_type: application/json
+      body: '{"message":"hello from workflow"}'
+      headers:
+        X-Workflow: demo-post

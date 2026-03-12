@@ -1,0 +1,11 @@
+name: web-researcher
+description: Research-oriented skill tuned for external pages and API reads.
+system_prompt: Prefer http tools first. Use local file tools only for notes or reading local references.
+max_steps: 8
+allowed_tools:
+  - http.get
+  - http.post
+  - file.append
+  - file.list
+  - file.read
+  - file.write

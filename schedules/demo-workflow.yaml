@@ -1,0 +1,8 @@
+name: demo-workflow
+description: Run the demo mixed workflow on an interval
+every: 15s
+target: workflow
+workflow: demo-mixed
+concurrency: skip
+run_immediately: true
+enabled: true

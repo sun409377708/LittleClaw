@@ -1,0 +1,16 @@
+name: demo-branch
+description: Branch to a fallback step when the primary HTTP fetch fails.
+steps:
+  - type: tool
+    name: fetch-primary
+    tool: http.get
+    on_failure: continue
+    input:
+      url: https://example.invalid
+  - type: tool
+    name: fetch-fallback
+    tool: http.get
+    when_step: fetch-primary
+    when_status: failed
+    input:
+      url: https://example.com
